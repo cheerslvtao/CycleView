@@ -17,7 +17,7 @@
 /**
  数据源
  */
-@property (nonatomic,strong) NSArray    * dataSource;
+@property (nonatomic,strong) NSMutableArray    * dataSource;
 
 
 /**
@@ -69,14 +69,23 @@
 
 @implementation LTCycleView
 
--(instancetype)initWithFrame:(CGRect)frame duration:(CGFloat)duration sourceImages:(NSArray *)images{
+
+#pragma mark === public
+-(void)updateImages:(NSArray *)imageArr{
+    [self.dataSource removeAllObjects];
+    [self.dataSource addObjectsFromArray:imageArr];
+    self.currentPage = 0;
+    self.pageControler.numberOfPages = self.dataSource.count;
+}
+
+-(instancetype)initWithFrame:(CGRect)frame duration:(CGFloat)duration sourceImages:(NSArray <UIImage *>*)images{
     
     if (self = [super initWithFrame:frame]) {
 
         view_width = frame.size.width;
         view_height = frame.size.height;
         
-        self.dataSource = [[NSArray alloc]initWithArray:images];
+        self.dataSource = [[NSMutableArray alloc]initWithArray:images];
         self.duration = duration;
         self.currentPage = 0;
         [self addSubview:self.mainScollView];
@@ -92,6 +101,7 @@
 }
 
 
+#pragma mark == private
 /**
  创建scollview
  */
@@ -115,7 +125,7 @@
 -(UIImageView *)leftImageView{
     if (!_leftImageView) {
         _leftImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, view_width, view_height)];
-        _leftImageView.image = [UIImage imageNamed:[self.dataSource lastObject]];
+        _leftImageView.image = [self.dataSource lastObject];
     }
     return _leftImageView ;
 }
@@ -127,7 +137,7 @@
     
     if (!_midImageView) {
         _midImageView = [[UIImageView alloc]initWithFrame:CGRectMake(view_width, 0, view_width, view_height)];
-        _midImageView.image = [UIImage imageNamed:self.dataSource[0]];
+        _midImageView.image = self.dataSource[0];
         _midImageView.userInteractionEnabled = YES;
         
         UITapGestureRecognizer * tap = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapImageView:)];
@@ -143,7 +153,7 @@
 -(UIImageView *)rightImageView{
     if (!_rightImageView) {
         _rightImageView = [[UIImageView alloc]initWithFrame:CGRectMake(view_width*2, 0, view_width, view_height)];
-        _rightImageView.image = [UIImage imageNamed:self.dataSource[1]];
+        _rightImageView.image = self.dataSource[1];
     }
     return _rightImageView;
 }
@@ -243,9 +253,9 @@
 }
 
 -(void)setLeftImageView:(NSInteger)left mid:(NSInteger)mid right:(NSInteger)right{
-    self.leftImageView.image  = [UIImage imageNamed:self.dataSource[left]];
-    self.midImageView.image  = [UIImage imageNamed:self.dataSource[mid]];//显示的图片
-    self.rightImageView.image = [UIImage imageNamed:self.dataSource[right]];
+    self.leftImageView.image  = self.dataSource[left];
+    self.midImageView.image  = self.dataSource[mid];//显示的图片
+    self.rightImageView.image =self.dataSource[right];
 }
 
 
@@ -306,5 +316,6 @@
     [self addSubview:self.pageControler];
     
 }
+
 
 @end

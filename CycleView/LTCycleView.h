@@ -10,11 +10,12 @@
 
 @protocol LTCycleViewDelegate <NSObject>
 
-
+@optional
 /**
  点击当前的imageView  返回点击的第几张图片
  */
 -(void)cycleViewDidSeleted:(NSInteger)pageIndex;
+
 
 @end
 
@@ -68,6 +69,11 @@
 
  @return self
  */
--(instancetype)initWithFrame:(CGRect)frame duration:(CGFloat)duration sourceImages:(NSArray *)images;
+-(instancetype)initWithFrame:(CGRect)frame duration:(CGFloat)duration sourceImages:(NSArray <UIImage *>*)images;
+
+/**
+ 更新轮播图数据
+ */
+-(void)updateImages:(NSArray *)imageArr;
 
 @end
